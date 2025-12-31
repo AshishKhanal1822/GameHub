@@ -1,4 +1,4 @@
-import { Gamepad2, Github, Twitter, Youtube, Mail } from "lucide-react";
+import { Gamepad2, Github, Twitter, Youtube, Mail, Trophy, Newspaper, Star } from "lucide-react";
 import Link from "next/link";
 
 
@@ -16,16 +16,16 @@ export const Footer = () => {
               </span>
             </Link>
             <p className="text-muted-foreground text-sm">
-              Your global gaming destination. Browse, buy, and play the best games from around the world.
+              Your global gaming destination. Browse and play the best free games from around the world.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                 <Youtube className="w-5 h-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
                 <Github className="w-5 h-5" />
               </a>
             </div>
@@ -33,21 +33,30 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-gaming font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-gaming font-semibold mb-4">Explore</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/games" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                <Link href="/games" className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2">
+                  <Gamepad2 className="w-4 h-4" />
                   All Games
                 </Link>
               </li>
               <li>
-                <Link href="/play" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                <Link href="/play" className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2">
+                  <Star className="w-4 h-4" />
                   Play Online
                 </Link>
               </li>
               <li>
-                <Link href="/cart" className="text-muted-foreground hover:text-primary transition-colors text-sm">
-                  Cart
+                <Link href="/leaderboard" className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2">
+                  <Trophy className="w-4 h-4" />
+                  Leaderboards
+                </Link>
+              </li>
+              <li>
+                <Link href="/news" className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2">
+                  <Newspaper className="w-4 h-4" />
+                  Gaming News
                 </Link>
               </li>
             </ul>
@@ -58,49 +67,44 @@ export const Footer = () => {
             <h4 className="font-gaming font-semibold mb-4">Categories</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/games?genre=Action" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                <Link href="/games?genre=action" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                   Action Games
                 </Link>
               </li>
               <li>
-                <Link href="/games?genre=RPG" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                <Link href="/games?genre=rpg" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                   RPG Games
                 </Link>
               </li>
               <li>
-                <Link href="/games?genre=Strategy" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                <Link href="/games?genre=strategy" className="text-muted-foreground hover:text-primary transition-colors text-sm">
                   Strategy Games
                 </Link>
               </li>
               <li>
-                <Link href="/games?price=free" className="text-muted-foreground hover:text-primary transition-colors text-sm">
-                  Free Games
+                <Link href="/games?genre=casual" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                  Casual Games
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Community */}
           <div>
-            <h4 className="font-gaming font-semibold mb-4">Support</h4>
+            <h4 className="font-gaming font-semibold mb-4">Community</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">
-                  Help Center
-                </a>
+                <Link href="/games?filter=favorites" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                  My Favorites
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">
-                  Terms of Service
-                </a>
+                <Link href="/admin" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                  Admin Panel
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors text-sm">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
+                <a href="mailto:support@gamehub.com" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-sm">
                   <Mail className="w-4 h-4" />
                   Contact Us
                 </a>
@@ -110,7 +114,7 @@ export const Footer = () => {
         </div>
 
         <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground text-sm">
-          <p>© 2024 GameHub. All rights reserved.</p>
+          <p>© 2024 GameHub. All rights reserved. Made with ❤️ for gamers worldwide.</p>
         </div>
       </div>
     </footer>

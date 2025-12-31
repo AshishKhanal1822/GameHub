@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Star, Play, Monitor, Smartphone, Gamepad } from "lucide-react";
+import { Star, Play, Monitor, Smartphone, Gamepad, Heart } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,8 @@ const platformIcons: Record<string, React.FC<{ className?: string }>> = {
 };
 
 export const GameCard = ({ game, index = 0, isConsoleSelected = false }: GameCardProps) => {
-  const { addToRecentlyPlayed } = useApp();
+  const { addToRecentlyPlayed, toggleFavorite, favorites } = useApp();
+  const isFavorite = favorites.includes(game.id);
   const router = useRouter();
 
   const handlePlayNow = (e: React.MouseEvent) => {
@@ -28,6 +29,12 @@ export const GameCard = ({ game, index = 0, isConsoleSelected = false }: GameCar
     e.stopPropagation();
     addToRecentlyPlayed(game.id);
     router.push(`/play/${game.id}`);
+  };
+
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFavorite(game.id);
   };
 
   const handleCardClick = () => {
@@ -53,8 +60,8 @@ export const GameCard = ({ game, index = 0, isConsoleSelected = false }: GameCar
       <Card
         variant="gaming"
         className={`overflow-hidden group cursor-pointer h-full flex flex-col transition-all duration-300 ${isConsoleSelected
-            ? "ring-4 ring-primary ring-offset-4 ring-offset-background shadow-neon scale-[1.02] border-primary"
-            : ""
+          ? "ring-4 ring-primary ring-offset-4 ring-offset-background shadow-neon scale-[1.02] border-primary"
+          : ""
           }`}
       >
         {/* Cover Image */}
@@ -78,6 +85,17 @@ export const GameCard = ({ game, index = 0, isConsoleSelected = false }: GameCar
             <Badge variant="free">FREE</Badge>
             {game.isFeatured && <Badge variant="premium">FEATURED</Badge>}
           </div>
+
+          {/* Favorite Toggle */}
+          <button
+            onClick={handleToggleFavorite}
+            className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 z-20 ${isFavorite
+              ? "bg-primary/20 text-primary"
+              : "bg-black/40 text-white/70 hover:bg-black/60 hover:text-white"
+              } backdrop-blur-md`}
+          >
+            <Heart className={`w-5 h-5 ${isFavorite ? "fill-primary" : ""}`} />
+          </button>
 
           {/* Play button overlay for playable games */}
           {game.isPlayable && (

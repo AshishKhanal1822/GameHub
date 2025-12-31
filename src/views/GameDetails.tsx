@@ -25,6 +25,7 @@ import { useApp } from "@/context/AppContext";
 import { toast } from "@/hooks/use-toast";
 import { useAdmin } from "@/context/AdminContext";
 import { QRControllerPanel } from "@/components/controller/QRControllerPanel";
+import { GameCard } from "@/components/games/GameCard";
 
 const platformIcons: Record<string, React.FC<{ className?: string }>> = {
   PC: Monitor,
@@ -37,7 +38,7 @@ const GameDetails = () => {
   const id = params?.id as string;
   const router = useRouter();
 
-  const { user } = useApp();
+
   const { allGames } = useAdmin();
   const game = allGames.find(g => g.id === (id || ""));
 
@@ -152,6 +153,25 @@ const GameDetails = () => {
                   </div>
                 </motion.div>
               )}
+
+              {/* Related Games */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                className="pt-10"
+              >
+                <h2 className="text-2xl font-gaming font-bold mb-6">You Might Also Like</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {allGames
+                    .filter(g => g.genre === game.genre && g.id !== game.id)
+                    .slice(0, 4)
+                    .map((relatedGame, idx) => (
+                      <GameCard key={relatedGame.id} game={relatedGame} index={idx} />
+                    ))}
+                </div>
+              </motion.div>
             </div>
 
             {/* Sidebar */}

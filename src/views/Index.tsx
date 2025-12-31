@@ -98,35 +98,37 @@ const Index = () => {
           />
         </div>
 
-        {/* CTA Section */}
-        <section className="py-20">
+        {/* Categories Section */}
+        <section className="py-20 bg-gradient-to-b from-background to-card/30">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="relative rounded-2xl overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20" />
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
-
-              <div className="relative p-12 md:p-20 text-center">
-                <Gamepad2 className="w-16 h-16 mx-auto mb-6 text-primary animate-float" />
-                <h2 className="text-3xl md:text-5xl font-gaming font-bold mb-4">
-                  Ready to <span className="gaming-text-gradient">Level Up</span>?
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-                  Join millions of gamers on GameHub. Create your account today to save your progress, track your recently played games, and use your phone as a controller!
-                </p>
-                <div className="flex flex-wrap gap-4 justify-center">
-                  <a href="/auth?mode=signup">
-                    <button className="gaming-btn-primary px-8 py-4 rounded-lg text-lg font-gaming">
-                      Get Started Free
-                    </button>
-                  </a>
-                </div>
+            <div className="flex items-center justify-between mb-10">
+              <div>
+                <h2 className="text-3xl font-gaming font-bold mb-2">Explore by Genre</h2>
+                <p className="text-muted-foreground">Find your next obsession in our curated categories</p>
               </div>
-            </motion.div>
+            </div>
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { name: "Action", icon: "⚔️", color: "from-red-500/20 to-orange-500/20", border: "border-red-500/30" },
+                { name: "RPG", icon: "🧙‍♂️", color: "from-purple-500/20 to-blue-500/20", border: "border-purple-500/30" },
+                { name: "Strategy", icon: "🧠", color: "from-blue-500/20 to-cyan-500/20", border: "border-blue-500/30" },
+                { name: "Casual", icon: "🎈", color: "from-green-500/20 to-emerald-500/20", border: "border-green-500/30" },
+              ].map((category) => (
+                <motion.div
+                  key={category.name}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  className={`p-8 rounded-2xl border ${category.border} bg-gradient-to-br ${category.color} cursor-pointer group transition-all`}
+                  onClick={() => window.location.href = `/games?genre=${category.name.toLowerCase()}`}
+                >
+                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">{category.icon}</div>
+                  <h3 className="text-xl font-gaming font-bold">{category.name}</h3>
+                  <p className="text-sm text-muted-foreground mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Browse {category.name} Games
+                  </p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
       </Layout>

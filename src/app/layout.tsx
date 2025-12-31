@@ -1,5 +1,6 @@
 import { Providers } from "./providers";
 import { SWRegister } from "@/components/SWRegister";
+import { WelcomeSplash } from "@/components/WelcomeSplash";
 import "./globals.css";
 import "@fontsource/inter";
 
@@ -29,7 +30,9 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className="font-sans antialiased">
-                <Providers>{children}</Providers>
+                <WelcomeSplash>
+                    <Providers>{children}</Providers>
+                </WelcomeSplash>
                 <SWRegister />
             </body>
         </html>

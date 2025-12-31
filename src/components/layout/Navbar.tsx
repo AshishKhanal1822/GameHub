@@ -13,8 +13,8 @@ import {
   User,
   Menu,
   X,
-  LogOut,
-  Settings
+  Search,
+  Heart
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -32,8 +32,18 @@ export const Navbar = () => {
   const pathname = usePathname();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user, logout } = useApp();
-  const { isAdmin } = useAdmin();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const { favorites } = useApp();
+  const { allGames } = useAdmin();
+
+  const searchResults = searchQuery
+    ? allGames.filter(game =>
+      game.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      game.genre.toLowerCase().includes(searchQuery.toLowerCase())
+    ).slice(0, 5)
+    : [];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-effect">
@@ -51,7 +61,7 @@ export const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-1 flex-1 justify-center">
             {navItems.map((item) => {
               const isActive = pathname === item.path;
 
@@ -66,7 +76,7 @@ export const Navbar = () => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <item.icon className="w-4 h-4" />
-                    <span className="font-medium">{item.label}</span>
+                    <span className="font-medium text-sm lg:text-base">{item.label}</span>
                     {isActive && (
                       <motion.div
                         layoutId="navbar-indicator"
@@ -79,45 +89,77 @@ export const Navbar = () => {
                 </Link>
               );
             })}
+            {/* Search Bar */}
+            <div className="ml-4 relative group">
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/50 border border-border transition-all duration-300 ${isSearchOpen ? 'w-64 border-primary/50 ring-1 ring-primary/20' : 'w-10 overflow-hidden'}`}>
+                <Search
+                  className="w-4 h-4 text-muted-foreground cursor-pointer shrink-0"
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                />
+                <input
+                  type="text"
+                  placeholder="Search games..."
+                  className="bg-transparent border-none outline-none text-sm w-full font-body"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (!isSearchOpen) setIsSearchOpen(true);
+                  }}
+                  onFocus={() => setIsSearchOpen(true)}
+                />
+              </div>
+
+              {/* Search Results Dropdown */}
+              {isSearchOpen && searchResults.length > 0 && (
+                <div className="absolute top-12 left-0 right-0 bg-card/95 backdrop-blur-xl border border-border rounded-xl shadow-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="p-2">
+                    {searchResults.map((game) => (
+                      <Link
+                        key={game.id}
+                        href={`/play/${game.id}`}
+                        onClick={() => {
+                          setSearchQuery("");
+                          setIsSearchOpen(false);
+                        }}
+                      >
+                        <div className="flex items-center gap-3 p-2 hover:bg-primary/10 rounded-lg transition-colors group">
+                          <img src={game.coverImage} className="w-10 h-10 rounded object-cover border border-border" alt={game.title} />
+                          <div>
+                            <div className="text-sm font-bold group-hover:text-primary transition-colors">{game.title}</div>
+                            <div className="text-[10px] text-muted-foreground uppercase tracking-widest">{game.genre}</div>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                    <div className="p-2 border-t border-border mt-1">
+                      <Link
+                        href={`/games?q=${searchQuery}`}
+                        className="text-[10px] font-bold text-primary uppercase flex items-center justify-center hover:underline"
+                        onClick={() => setIsSearchOpen(false)}
+                      >
+                        View all results
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
-            {/* Admin Link */}
-            <Link href="/admin">
-              <Button variant="ghost" size="sm" className={`gap-2 ${isAdmin ? 'text-primary' : ''}`}>
-                <Settings className="w-4 h-4" />
-                <span className="hidden lg:inline">Admin</span>
+
+            {/* Favorites Link */}
+            <Link href="/games?filter=favorites">
+              <Button variant="ghost" size="icon" className="relative">
+                <Heart className={`w-5 h-5 ${favorites.length > 0 ? "text-primary fill-primary" : ""}`} />
+                {favorites.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary text-[10px] font-bold flex items-center justify-center rounded-full text-white">
+                    {favorites.length}
+                  </span>
+                )}
               </Button>
             </Link>
-
-            {/* User Menu */}
-            {user ? (
-              <div className="hidden md:flex items-center gap-2">
-                <Link href="/profile">
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <User className="w-4 h-4" />
-                    {user.username}
-                  </Button>
-                </Link>
-                <Button variant="ghost" size="icon" onClick={logout}>
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              </div>
-            ) : (
-              <div className="hidden md:flex items-center gap-2">
-                <Link href="/auth">
-                  <Button variant="ghost" size="sm">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link href="/auth?mode=signup">
-                  <Button variant="gaming" size="sm">
-                    Sign Up
-                  </Button>
-                </Link>
-              </div>
-            )}
 
             {/* Mobile Menu Toggle */}
             <Button
@@ -165,35 +207,12 @@ export const Navbar = () => {
               })}
 
               <div className="border-t border-border pt-4 mt-4">
-                {user ? (
-                  <>
-                    <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
-                      <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-secondary">
-                        <User className="w-5 h-5" />
-                        <span>Profile</span>
-                      </div>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        logout();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-secondary text-left"
-                    >
-                      <LogOut className="w-5 h-5" />
-                      <span>Sign Out</span>
-                    </button>
-                  </>
-                ) : (
-                  <div className="space-y-2">
-                    <Link href="/auth" onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="outline" className="w-full">Sign In</Button>
-                    </Link>
-                    <Link href="/auth?mode=signup" onClick={() => setMobileMenuOpen(false)}>
-                      <Button variant="gaming" className="w-full">Sign Up</Button>
-                    </Link>
+                <Link href="/games?filter=favorites" onClick={() => setMobileMenuOpen(false)}>
+                  <div className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-secondary">
+                    <Heart className="w-5 h-5" />
+                    <span>My Favorites ({favorites.length})</span>
                   </div>
-                )}
+                </Link>
               </div>
             </div>
           </motion.div>
